@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include "dbgmsg.h"
 #include <iostream>
+#include <cmath>
 #include <string>
 
 #define RESET "\033[0m"
@@ -46,27 +47,32 @@ void check_program_link(unsigned int pid) {
 }
 
 float vertices[] = {
-	0.5f,   0.5f, 0.0f, // top right 
-	0.5f,  -0.5f, 0.0f, // bottom right
-	-0.5f, -0.5f, 0.0f, // bottom left
-	-0.5f,  0.5f, 0.0f, // top left
+	-1.0f,   -0.6f, 0.0f,	// bottom left
+	0.0f,  -1.0f, 0.0f,		// bottom middle 
+	1.0f, -0.6f, 0.0f,		// bottom right
+	-1.0f,  0.6f, 0.0f,		// top left
+	0.0f,  1.0f, 0.0f,		// top middle
+	1.0f,  0.6f, 0.0f,		// top right
 };
 
 unsigned int indices[] = {
-	0, 1, 3,
-	1, 2, 3
+	0, 4, 2,
+	3, 1, 5
 };
 
 const char *vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"out vec4 vertexColor;\n"
 "void main() {\n"
 "	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"	vertexColor = vec4(0.7f, 0.3f, 0.5f, 1.0f);\n"
 "}\n";
 
 const char *fragmentShaderSource = "#version 330 core\n"
+"uniform vec4 ourColor;\n"
 "out vec4 FragColor;\n"
 "void main() {\n"
-"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"	FragColor = ourColor;\n"
 "}\n";
 
 int main() {
@@ -104,6 +110,8 @@ int main() {
 
 	// update viewport on window resize
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	/* ============================================= */
 
 	// vertex array object
 	unsigned int VAO;
@@ -167,8 +175,14 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
+
+		float timeValue = glfwGetTime();
+		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+		glUniform4f(vertexColorLocation, 0.2f, greenValue, 0.6f, 1.0f);
+
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 		glBindVertexArray(0);
 
 		// events and swap
