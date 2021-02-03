@@ -1,3 +1,6 @@
+#ifndef DBGMSG_H
+#define DBGMSG_H
+
 #include <iostream>
 #include <string>
 
@@ -27,3 +30,5 @@ void print_failure(std::string msg) {
 void print_infolog(std::string msg) {
 	prefix_print("INFOLOG", msg, BOLDBLUE);
 }
+
+#endif
