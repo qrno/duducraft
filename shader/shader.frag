@@ -1,13 +1,11 @@
 #version 330 core
-out vec4 FragColor;
 
-in vec3 ourColor;
 in vec2 TexCoord;
+in vec3 blockColor;
 
-uniform sampler2D texture1;
-uniform sampler2D texture2;
+uniform sampler2D dirt;
 
-void main()
-{
-	FragColor = mix(texture(texture1, TexCoord), texture(texture2, vec2(-TexCoord.x, TexCoord.y)), 0.5);
+void main() {
+	gl_FragColor = vec4(blockColor, 1.0f);
+//	gl_FragColor = texture(dirt, TexCoord);
 }

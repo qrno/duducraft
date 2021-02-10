@@ -3,6 +3,10 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -43,6 +47,8 @@ public:
 	void setBool(const std::string &name, bool value) const;
 	void setInt(const std::string &name, int value) const;
 	void setFloat(const std::string &name, float value) const;
+	void setMat4(const std::string &name, glm::mat4 &mat) const;
+	void setVec3(const std::string &name, glm::vec3 &vec) const;
 };
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
@@ -111,6 +117,15 @@ void Shader::setInt(const std::string &name, int value) const {
 }
 void Shader::setFloat(const std::string &name, float value) const {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::setMat4(const std::string &name, glm::mat4 &mat) const {
+	int loc = glGetUniformLocation(ID, name.c_str());
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setVec3(const std::string &name, glm::vec3 &vec) const {
+	int loc = glGetUniformLocation(ID, name.c_str());
+	glUniform3fv(loc, 1, glm::value_ptr(vec));
 }
 
 #endif
