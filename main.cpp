@@ -107,12 +107,6 @@ int main() {
 		0.5,-0.5,-0.5,0.0, 1.0,
 	};
 
-	long long v, pm, pe;
-	v = 1;
-	pe = 141437;	
-	pm = 43241;
-
-	Chunk chunk;
 
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -142,9 +136,18 @@ int main() {
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
 
+	int height[16][16];
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 16; j++) {
+			height[i][j] = 15 - abs(8-i) - abs(8-j);
+		}
+	}
+
+	/* Chunk chunk; */
+	Chunk chunk(height);
+
 	// loop
 	while (!glfwWindowShouldClose(window)) {
-
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -214,9 +217,14 @@ void processInput(GLFWwindow* window) {
 	if (pressed(window, GLFW_KEY_D))
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 
-	if (pressed(window, GLFW_KEY_Z))
+	if (pressed(window, GLFW_KEY_J))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (pressed(window, GLFW_KEY_K))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	if (pressed(window, GLFW_KEY_SPACE))
 		camera.ProcessKeyboard(UP, deltaTime);
-	if (pressed(window, GLFW_KEY_X))
+	if (pressed(window, GLFW_KEY_LEFT_SHIFT))
 		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 

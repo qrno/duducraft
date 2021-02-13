@@ -20,6 +20,22 @@ public:
 		}
 	}
 
+	Chunk(int height[16][16]) {
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 16; j++) {
+				for (int k = 0; k < 16; k++) {
+					if (height[i][j] > k) {
+						SetCube(i, k, j,
+								Block({i/15.0f, k/15.0f, j/15.0f}));
+					} else {
+						SetCube(i, k, j,
+								Block({-1.0f, -1.0f, -1.0f}));
+					}
+				}
+			}
+		}
+	}
+
 	void SetCube(int x, int y, int z, Block b) {
 		cubes[x][y][z] = Cube({x, 15-y, z}, b);
 	}
